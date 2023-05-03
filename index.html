@@ -1,0 +1,77 @@
+index.html
+<html>
+<head>
+    <title>MJPEG Server</title>
+    <style>
+        body {
+            background-color: black;
+        }
+        img {
+            max-width: 100%;
+        }
+        button{
+            width:200px;
+            height: 130px;
+            background-color: bisque;
+            color:cadetblue;
+            font-size: 2em;
+        }
+        .btns
+        {
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <!-- <img id="img" alt="streaming test" src="http://0.0.0.0:8080/maryjane/"/> -->
+    <div class="btns">
+  <!-- 
+
+      <button id="stopBtn" onclick="window.exitLoop=1; closeInterval(window.timer);">STOP</button>
+  -->
+    </div>
+    <img id="img" alt="streaming test" src="art.jpeg"/>
+
+     <script>
+ var btn = document.getElementById("stopBtn");
+ //btn.innerText="hello"; //2023-05-02 16:09:12 - not working
+ btn.style.color="red";
+        //ffmpeg -y -re -stream_loop -1 -i /home/boony/Vidéos/carly.mp4 -f image2 -update 1 /home/boony/Documents/dev/mjpeg_server/art.jpeg
+
+    window.exitLoop=0;
+    window.img = document.getElementById("img");
+    var n = 0;
+    var baseUrl = img.src.split("?")[0]; //Prendre le début pour la premiere fois.
+    console.log("starting loop, baseUrl="+baseUrl );
+
+
+    //2023-05-02 13:19:13 - Ne fonctionne pas dutout, ça bloque carrément le navigateur !!
+    //2023-05-02 13:22:39 - Nécessite un killall brave
+    function loop_deprecated() 
+    {        
+        
+        while(!window.exitLoop)
+        {
+            var newurl = baseUrl+"?v="+n;
+            window.img.src=newurl;
+            n++;
+            if(n>=MAX_FRAME_RESET)n=0;
+            console.log(newurl);
+        }//wend
+    }
+
+    window.MAX_FRAME_RESET=9999;
+
+    var freq = 60; // speed
+   window.timer = setInterval(function(){
+            var newurl = baseUrl+"?v="+n;
+            window.img.src=newurl;
+            n++;
+            if(n>=MAX_FRAME_RESET)n=0;
+            console.log(newurl);
+    },freq);
+
+    //loop();
+     </script>
+</body>
+</html>
