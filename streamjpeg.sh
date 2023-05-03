@@ -18,14 +18,25 @@ cachedir=$HOME/.cache/streamjpeg
 
 port=8080
 path=$cachedir
-rate=0.8 # rate=1 is normal readrate
+rate=1 # rate=1 is normal readrate
+#video_size=1024x768 #video_size non specifié par défaut = 
+video_size_str=""
+X=0
+Y=0
 
-while getopts ":p:i:P:" opt; do
+
+while getopts ":p:i:P:a:s:x:y:" opt; do
   case $opt in
-    a) arg_1="$OPTARG"
+    a) width_height="$OPTARG"
     ;;
     P) port="$OPTARG"
     ;;   
+    x) X="$OPTARG"
+    ;;   
+    y) Y="$OPTARG"
+    ;;  
+    s) video_size="$OPTARG"
+    ;;    
     p) path="$OPTARG"
     ;;
     r) rate="$OPTARG"
@@ -51,7 +62,11 @@ ip_addr_port=0.0.0.0:$port
 #       streamjpeg -s /path_to_website
 #ffmpeg -y -readrate 0.1 -stream_loop -1 -i /home/somevid.mp4 -f image2 -update 1 /home/serverpath/art.jpeg
 
-
+if [ -z  "$video_size" ] ; then 
+video_size_str=""
+else
+video_size_str=" -video_size $video_size"
+fi
 
 
 printf "Changing to webserver directory : ${WHITE}'$path'${NC}\n"
@@ -65,9 +80,11 @@ printf "pid_php : ${LMAG}'$pid_php'${NC}\n"
 
 printf "Start streaming with ffmpeg : ${YELL}'$ip_addr_port'${NC}\n"
 if [ -z  "$video" ] ; then 
-printf "Streaming : ${YELL}'X11grab'${NC}\n"
+printf "Streaming : [${YELL} x11grab -i :0.0+$X,$Y  video_size_str=$video_size_str ${NC}]\n"
 #echo "x11grab -i :0.0+100,200"
-#ffmpeg -y -readrate $rate -stream_loop -1 -i $video -f image2 -update 1 $path/art.jpeg 
+
+ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y  -update 1 art.jpeg
+
 else
 printf "Streaming : ${YELL}'$video'${NC}\n"
 ffmpeg -y -readrate $rate -stream_loop -1 -i $video -f image2 -update 1 $path/art.jpeg

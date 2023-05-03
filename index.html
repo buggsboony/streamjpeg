@@ -35,7 +35,7 @@ index.html
      <script>
  var btn = document.getElementById("stopBtn");
  //btn.innerText="hello"; //2023-05-02 16:09:12 - not working
- btn.style.color="red";
+ //btn.style.color="red";
         //ffmpeg -y -re -stream_loop -1 -i /home/boony/Vidéos/carly.mp4 -f image2 -update 1 /home/boony/Documents/dev/mjpeg_server/art.jpeg
 
     window.exitLoop=0;
@@ -45,7 +45,7 @@ index.html
     console.log("starting loop, baseUrl="+baseUrl );
 
 
-    //2023-05-02 13:19:13 - Ne fonctionne pas dutout, ça bloque carrément le navigateur !!
+    //2023-05-02 13:19:13 - Not working at all, browser will seriously crash using this function !
     //2023-05-02 13:22:39 - Nécessite un killall brave
     function loop_deprecated() 
     {        
