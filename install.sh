@@ -32,9 +32,15 @@ then
     then 
         printf "Cache directory ${LRED}'$cachedir'${NC} does not exist.${NC}\n";
     else
-        printf "Cache directory ${LGREEN}'$cachedir'${NC} created.\n";
+        printf "Cache directory ${YELL}'$cachedir'${NC} created.\n";
     fi
 fi
 
-printf "sending index file  to $cachedir.\n";
-cp ./index.html "$cachedir/index.html"
+printf "sending web files to $cachedir.\n";
+        printf "${YELL}\n";
+
+cp -v ./index.php "$cachedir/"
+cp -v ./index_static.html "$cachedir/"
+cp -v ./cleaner.php "$cachedir/"
+
+        printf "${NC}\n";

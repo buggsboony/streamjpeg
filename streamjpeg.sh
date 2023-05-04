@@ -12,6 +12,8 @@ CYAN='\033[0;36m'
 LCYAN='\033[1;36m'
 NC='\033[0m' # No Color
 
+
+help=  'streamjpeg -r 1(rate) -p /path_to_website -i /path_video -P 8082 -s 1280x720 -X positionX -Y positionY  \n  '
  
 #cache dir: 
 cachedir=$HOME/.cache/streamjpeg
@@ -50,6 +52,7 @@ while getopts ":p:i:P:a:s:x:y:r:" opt; do
 
   case $OPTARG in
     -*) echo "Option $opt needs a valid argument"
+    echo $help
     exit 1
     ;;
   esac
