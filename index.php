@@ -22,6 +22,16 @@
     </style>
 </head>
 <body>
+
+<?php 
+#detectExtension -- 
+$pattern="art";
+$ext=@$_REQUEST["ext"];
+if(!$ext):
+    $ext="png"; //Default is screencast lossless format
+endif;
+//echo "<pre>files scanned: \n"; var_dump( $files ); echo "</pre>";
+?>
     <!-- <img id="img" alt="streaming test" src="http://0.0.0.0:8080/maryjane/"/> -->
     <div class="btns">
   <!-- 
@@ -29,7 +39,7 @@
       <button id="stopBtn" onclick="window.exitLoop=1; closeInterval(window.timer);">STOP</button>
   -->
     </div>
-    <img id="img" alt="streaming test" src="art"/>
+    <img id="img" alt="streaming test" src="<?php echo $pattern;?>"/>
 
      <script>
  var btn = document.getElementById("stopBtn");
@@ -40,7 +50,10 @@
     window.exitLoop=0;
     window.img = document.getElementById("img");
     var n = 0;
-    var baseUrl = img.src.split("?")[0]; //Prendre le début pour la premiere fois.
+    // var baseUrl = img.src.split("?")[0]; //Default first time
+    // console.log("starting loop, baseUrl="+baseUrl );
+
+    var baseUrl = "<?php echo $pattern;?>.";
     console.log("starting loop, baseUrl="+baseUrl );
 
 
@@ -76,6 +89,20 @@
             console.log(newurl);
     
     }//reloadSameImg
+
+
+    function loadNextImgNoExt()
+    {
+        var newurl = baseUrl+n;
+            window.img.src=newurl;
+            if(k>=inc_freq)    
+            {
+                k=0;
+                n+=step;  
+            }
+            k++;    
+            console.log("step="+step,newurl);
+    }//loadNextImg
 
     function loadNextImg()
     {

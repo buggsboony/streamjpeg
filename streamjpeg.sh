@@ -14,7 +14,7 @@ NC='\033[0m' # No Color
 
 
 help=  'streamjpeg -r 1(rate) -p /path_to_website -i /path_video -P 8082 -s 1280x720 -X positionX -Y positionY  \n  '
- 
+
 #cache dir: 
 cachedir=$HOME/.cache/streamjpeg
 
@@ -59,7 +59,12 @@ while getopts ":p:i:P:a:s:x:y:r:" opt; do
 done
 
 
+pattern="art"
 ip_addr_port=0.0.0.0:$port
+
+
+
+
 
 #Usage
 #       streamjpeg -s /path_to_website
@@ -72,29 +77,47 @@ video_size_str=" -video_size $video_size"
 fi
 
 
-printf "Changing to webserver directory : ${WHITE}'$path'${NC}\n"
+printf "${WHITE}Changing to webserver directory : ${YELL}'$path'${NC}\n"
 cd "$path"
 
-printf "Starting php development server : ${YELL}'$ip_addr_port'${NC}\n"
+# cleaning folder 2023-05-04 16:49:29
+printf "${WHITE}Removing images ${NC}${YELL}'$pattern*'${NC}\n"
+rm $pattern*
+
+
+printf "${WHITE}Starting php development server :${NC} ${YELL}'$ip_addr_port'${NC}\n"
 php -S $ip_addr_port  &
 pid_php=$!
-printf "pid_php : ${LMAG}'$pid_php'${NC}\n"
+printf "${WHITE}pid_php :${NC} ${LMAG}'$pid_php'${NC}\n"
 
 
-printf "Start streaming with ffmpeg : ${YELL}'$ip_addr_port'${NC}\n"
+printf "${WHITE}Start streaming with ffmpeg :${NC} ${YELL}'$ip_addr_port'${NC}\n"
 if [ -z  "$video" ] ; then 
-printf "Streaming : [${YELL} x11grab -i :0.0+$X,$Y  video_size_str=$video_size_str ${NC}]\n"
+#Streaming cast screen -------
+printf "${WHITE}Streaming :${NC} [${YELL} x11grab -i :0.0+$X,$Y  video_size_str=$video_size_st
+  Stream #0:0: Video: rawvideo (BGR[0] / 0x524742), bgr0, 1920x1080, 1988667 kb/s, 29.97 fps, 1000k tbr, 1000k tbn
+Stream mapping:
+r ${NC}]\n"
 #echo "x11grab -i :0.0+100,200"
 
+extension=".jpeg"
+pattern_file=$pattern'%1d'$extension
+
+
 #ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y  -update 1 art.jpeg
-ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y -vsync 0 -update 1 art.png
+ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y -vsync 0 "$path/$pattern_file"
 
 else
-printf "Streaming : ${YELL}'$video'${NC}\n"
-ffmpeg -y -readrate $rate -stream_loop -1 -i $video -f image2 -update 1 $path/art.jpeg
+#Streaming from video file -------------
+printf "${WHITE}Streaming :${NC} ${YELL}'$video'${NC}\n"
+
+extension=".png"
+pattern_file=$pattern'%1d'$extension
+
+ffmpeg -y -readrate $rate -stream_loop -1 -i $video -f image2 "$path/$pattern_file"
 fi
 pid_ffmpeg=$!
-printf "pid_ffmpeg : ${LMAG}'$pid_ffmpeg'${NC}\n"
+printf "${WHITE}pid_ffmpeg :${NC} ${LMAG}'$pid_ffmpeg'${NC}\n"
 
 #Ready to kill all child processes on interrupt
 trap "kill -9 $pid_php $pid_ffmpeg" SIGINT
