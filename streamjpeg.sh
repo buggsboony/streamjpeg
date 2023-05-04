@@ -93,14 +93,14 @@ printf "${WHITE}pid_php :${NC} ${LMAG}'$pid_php'${NC}\n"
 
 printf "${WHITE}Start streaming with ffmpeg :${NC} ${YELL}'$ip_addr_port'${NC}\n"
 if [ -z  "$video" ] ; then 
-#Streaming cast screen -------
+#Streaming cast screen ---------  PNG   --------
 printf "${WHITE}Streaming :${NC} [${YELL} x11grab -i :0.0+$X,$Y  video_size_str=$video_size_st
   Stream #0:0: Video: rawvideo (BGR[0] / 0x524742), bgr0, 1920x1080, 1988667 kb/s, 29.97 fps, 1000k tbr, 1000k tbn
 Stream mapping:
 r ${NC}]\n"
 #echo "x11grab -i :0.0+100,200"
 
-extension=".jpeg"
+extension=".png"
 pattern_file=$pattern'%1d'$extension
 
 
@@ -108,10 +108,10 @@ pattern_file=$pattern'%1d'$extension
 ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y -vsync 0 "$path/$pattern_file"
 
 else
-#Streaming from video file -------------
+#Streaming from video file ----- JPEG --------
 printf "${WHITE}Streaming :${NC} ${YELL}'$video'${NC}\n"
 
-extension=".png"
+extension=".jpeg"
 pattern_file=$pattern'%1d'$extension
 
 ffmpeg -y -readrate $rate -stream_loop -1 -i $video -f image2 "$path/$pattern_file"

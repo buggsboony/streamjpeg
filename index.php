@@ -30,6 +30,7 @@ $ext=@$_REQUEST["ext"];
 if(!$ext):
     $ext="png"; //Default is screencast lossless format
 endif;
+
 //echo "<pre>files scanned: \n"; var_dump( $files ); echo "</pre>";
 ?>
     <!-- <img id="img" alt="streaming test" src="http://0.0.0.0:8080/maryjane/"/> -->
@@ -53,7 +54,9 @@ endif;
     // var baseUrl = img.src.split("?")[0]; //Default first time
     // console.log("starting loop, baseUrl="+baseUrl );
 
-    var baseUrl = "<?php echo $pattern;?>.";
+    var pattern = "<?php echo $pattern;?>";
+    var ext = "<?php echo $ext;?>";
+    var baseUrl = pattern+"."+ext;
     console.log("starting loop, baseUrl="+baseUrl );
 
 
@@ -106,7 +109,7 @@ endif;
 
     function loadNextImg()
     {
-        var newurl = baseUrl+n;
+        var newurl = pattern+n+"."+ext;
             window.img.src=newurl;
             if(k>=inc_freq)    
             {
@@ -125,6 +128,8 @@ endif;
         var url = "cleaner.php";
         var postData = new FormData();
         postData.append('n', n);
+        postData.append('pattern', pattern);
+        postData.append('ext', ext);
                var xhttp = new XMLHttpRequest();
                xhttp.onreadystatechange = function() {
                    if (this.readyState == 4 && this.status == 200) {

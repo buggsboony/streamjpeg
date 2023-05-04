@@ -17,6 +17,9 @@
 $dir = ".";
 $pattern = "art";
 $n = @$_REQUEST["n"];
+$pattern = @$_REQUEST["pattern"];
+$ext = @$_REQUEST["ext"];
+
 $deleteds = array(); //store success list
 
 echo "<pre>_request: \n"; var_dump( $_REQUEST ); echo "</pre>";
@@ -27,7 +30,7 @@ if( $n ):
     //2023-05-04 11:51:05 - Delete all above
     $deleted = "start loop";
     while($deleted):
-        $filename = $pattern.$n;
+        $filename = $pattern.$n.".".$ext;
         $deleted = unlinkIfExists($filename); //false when not found
         //echo "<pre>unlinkIfExists($filename): \n"; var_dump( $deleted ); echo "</pre>";
         if($deleted) {
