@@ -16,7 +16,7 @@ NC='\033[0m' # No Color
 #cache dir: 
 cachedir=$HOME/.cache/streamjpeg
 
-port=8080
+port=8082
 path=$cachedir
 rate=1 # rate=1 is normal readrate
 #video_size=1024x768 #video_size non specifié par défaut = 
@@ -25,7 +25,7 @@ X=0
 Y=0
 
 
-while getopts ":p:i:P:a:s:x:y:" opt; do
+while getopts ":p:i:P:a:s:x:y:r:" opt; do
   case $opt in
     a) width_height="$OPTARG"
     ;;
@@ -83,7 +83,8 @@ if [ -z  "$video" ] ; then
 printf "Streaming : [${YELL} x11grab -i :0.0+$X,$Y  video_size_str=$video_size_str ${NC}]\n"
 #echo "x11grab -i :0.0+100,200"
 
-ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y  -update 1 art.jpeg
+#ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y  -update 1 art.jpeg
+ffmpeg -y $video_size_str -readrate $rate -draw_mouse 1 -stream_loop -1 -f x11grab -i :0.0+$X,$Y -vsync 0 -update 1 art.png
 
 else
 printf "Streaming : ${YELL}'$video'${NC}\n"
